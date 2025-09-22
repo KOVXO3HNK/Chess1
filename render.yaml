@@ -2,8 +2,7 @@ services:
   - type: static_site
     name: telegram-chess-webapp
     env: static
-    buildCommand: ""
-    publishPath: .
+    publishPath: public
     headers:
       - path: /*
         name: Cache-Control
