@@ -567,6 +567,7 @@ header {
   border-color: rgba(123, 92, 255, 0.6);
 }
 
+/* Плавающее уведомление в верхней части экрана */
 .notification {
   position: fixed;
   left: 50%;
@@ -584,6 +585,7 @@ header {
   z-index: 999;
 }
 
+/* Состояние видимости уведомления */
 .notification.show {
   opacity: 1;
   pointer-events: auto;

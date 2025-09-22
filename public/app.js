@@ -147,6 +147,7 @@ import { Chess } from './chess.js';
 
   const notificationEl = document.getElementById('notification');
   const screens = Array.from(document.querySelectorAll('.screen'));
+  // --- Карточки навигации и универсальные кнопки "назад" ---
   const cards = document.querySelectorAll('.card');
   const backButtons = document.querySelectorAll('[data-back]');
   const homeStatsEl = document.getElementById('home-stats');
@@ -231,6 +232,7 @@ import { Chess } from './chess.js';
   const multiBoardView = createBoard(multiBoardEl, handleMultiSquareClick);
   const questBoardView = createBoard(questBoardEl, handleQuestSquareClick);
 
+  // --- Инициализация основных подсистем интерфейса ---
   setupNavigation();
   setupLevelSelector();
   setupAIControls();
@@ -285,7 +287,9 @@ import { Chess } from './chess.js';
     return { container, squares };
   }
 
+  // --- Навигация по экранам приложения ---
   function setupNavigation() {
+    // Карточка переводит пользователя на нужный раздел
     cards.forEach((card) => {
       card.addEventListener('click', () => {
         const target = card.dataset.target;
@@ -295,6 +299,7 @@ import { Chess } from './chess.js';
       });
     });
 
+    // Все кнопки "назад" возвращают к главному экрану
     backButtons.forEach((button) => {
       button.addEventListener('click', () => {
         showScreen('home-screen');
@@ -303,15 +308,26 @@ import { Chess } from './chess.js';
     });
   }
 
+  // --- Переключение экрана с учётом алиасов ---
   function showScreen(id) {
+    const normalizedTarget = normalizeScreenId(id);
+
     screens.forEach((screen) => {
-      screen.classList.toggle('active', screen.id === id || screen.dataset.screen === id);
+      const currentId = normalizeScreenId(screen.id || screen.dataset.screen);
+      screen.classList.toggle('active', currentId === normalizedTarget);
     });
-    if (id !== 'home-screen') {
+
+    if (normalizedTarget !== 'home-screen') {
       TelegramWebApp.setupBackButton(() => showScreen('home-screen'));
     } else {
       TelegramWebApp.hideBackButton();
     }
+  }
+
+  // --- Приведение идентификатора экрана к единому виду ---
+  function normalizeScreenId(value) {
+    if (!value) return '';
+    return value === 'home' ? 'home-screen' : value;
   }
 
   function setupLevelSelector() {
@@ -1080,6 +1096,7 @@ import { Chess } from './chess.js';
     settingsContentEl.appendChild(content);
   }
 
+  // --- Ненавязчивые уведомления поверх интерфейса ---
   function showNotification(message) {
     notificationEl.textContent = message;
     notificationEl.classList.add('show');
