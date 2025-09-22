@@ -2,152 +2,267 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#1a1a2e" />
-    <meta name="description" content="Играйте в шахматы против ИИ, выполняйте квесты и соревнуйтесь онлайн в Telegram" />
-    <title>Шахматы - Telegram Web App</title>
-    
-    <!-- Telegram Web App Script -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Telegram Web App Integration -->
-    <script src="/telegram-web-app.js"></script>
-    
-    <!-- PWA Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Шахматы · Telegram Web App</title>
+    <meta name="description" content="Играй против ИИ, выполняй квесты и соревнуйся с друзьями в шахматах прямо в Telegram" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Шахматы" />
-    
-    <style>
-      /* Telegram Web App Styles */
-      .telegram-web-app {
-        background: var(--tg-bg-color, #1a1a2e);
-        color: var(--tg-text-color, #ffffff);
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        overflow-x: hidden;
-      }
-      
-      /* Loading Screen */
-      .loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease-out;
-      }
-      
-      .loading-screen.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-      
-      .chess-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        animation: pulse 2s infinite;
-      }
-      
-      .loading-text {
-        color: #ffffff;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-      }
-      
-      .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid rgba(255, 255, 255, 0.1);
-        border-top: 3px solid #3390ec;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-      
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      
-      /* Mobile Optimizations */
-      @media (max-width: 768px) {
-        body {
-          font-size: 16px; /* Prevent zoom on iOS */
-        }
-      }
-      
-      /* Prevent text selection and context menu */
-      * {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      
-      /* Allow text selection for inputs */
-      input, textarea {
-        -webkit-user-select: text;
-        -moz-user-select: text;
-        -ms-user-select: text;
-        user-select: text;
-      }
-    </style>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="/favicon.ico" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script defer src="/telegram-web-app.js"></script>
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-      <div class="chess-icon">♔</div>
-      <div class="loading-text">Загрузка шахмат...</div>
-      <div class="loading-spinner"></div>
-    </div>
-    
-    <div id="root"></div>
-    
-    <script>
-      // Hide loading screen when app is ready
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          const loadingScreen = document.getElementById('loading-screen');
-          if (loadingScreen) {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => loadingScreen.remove(), 500);
-          }
-        }, 1000);
-      });
-      
-      // Prevent context menu
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
-      
-      // Prevent zoom on double tap
-      let lastTouchEnd = 0;
-      document.addEventListener('touchend', function(event) {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-          event.preventDefault();
-        }
-        lastTouchEnd = now;
-      }, false);
-    </script>
-    
-    <script type="module" src="/src/main.jsx"></script>
+    <main>
+      <header class="screen active" data-screen="home">
+        <div class="app-title">
+          <span class="card-icon">♔</span>
+          <div>
+            <h1>Шахматы</h1>
+            <p class="app-subtitle">Играйте, учитесь и совершенствуйтесь в королевской игре</p>
+          </div>
+        </div>
+        <span class="version-badge">Версия 1.0</span>
+      </header>
+
+      <section class="screen active" id="home-screen" data-screen="home">
+        <div class="card-grid">
+          <article class="card" data-target="ai-screen">
+            <div class="card-icon">🤖</div>
+            <h3>Игра против ИИ</h3>
+            <p>Пять уровней сложности, интеллектуальные подсказки и таймер партии.</p>
+          </article>
+
+          <article class="card" data-target="multiplayer-screen">
+            <div class="card-icon">🌐</div>
+            <h3>Мультплеер</h3>
+            <p>Играй с другом за одним устройством или отправь приглашение через Telegram.</p>
+          </article>
+
+          <article class="card" data-target="quests-screen">
+            <div class="card-icon">🧩</div>
+            <h3>Квесты</h3>
+            <p>Решай шахматные задачи и получай награды за серию побед.</p>
+          </article>
+
+          <article class="card" data-target="profile-screen">
+            <div class="card-icon">🧑‍🚀</div>
+            <h3>Профиль</h3>
+            <p>Следи за рейтингом, статистикой и прогрессом выполнения квестов.</p>
+          </article>
+
+          <article class="card" data-target="settings-screen">
+            <div class="card-icon">⚙️</div>
+            <h3>Настройки</h3>
+            <p>Настрой внешний вид приложения, уведомления и параметры партии.</p>
+          </article>
+        </div>
+
+        <div class="stats-bar" id="home-stats"></div>
+      </section>
+
+      <section class="screen" id="ai-screen">
+        <div class="screen-header">
+          <button class="back-button" data-back>
+            ← Назад
+          </button>
+          <div class="screen-title">
+            <h2>Игра против ИИ</h2>
+            <span id="ai-level-label">Уровень 1</span>
+          </div>
+          <div class="badge" id="ai-status">Ход белых</div>
+        </div>
+
+        <div class="screen-body ai-layout">
+          <aside class="panel">
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Игроки</h3>
+              <div class="sidebar-content" id="ai-players"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Управление</h3>
+              <div class="sidebar-content">
+                <button class="button" id="new-ai-game">Новая игра</button>
+                <button class="button secondary" id="ai-undo">Отменить ход</button>
+                <button class="button danger" id="ai-resign">Сдаться</button>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Сложность</h3>
+              <div class="level-selector" id="level-selector"></div>
+            </div>
+          </aside>
+
+          <div class="board-wrapper">
+            <div class="chessboard" id="ai-board"></div>
+          </div>
+
+          <aside class="panel">
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Статистика</h3>
+              <div class="sidebar-content" id="ai-stats"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Подсказка</h3>
+              <div class="sidebar-content" id="ai-hint">Начните игру, сделав первый ход.</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" id="multiplayer-screen">
+        <div class="screen-header">
+          <button class="back-button" data-back>← Назад</button>
+          <div class="screen-title">
+            <h2>Мультплеер</h2>
+            <span>Локальная партия и быстрые приглашения друзьям</span>
+          </div>
+        </div>
+
+        <div class="screen-body ai-layout">
+          <aside class="panel">
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Режим</h3>
+              <div class="sidebar-content">
+                <button class="button" id="local-game">Партия за одним устройством</button>
+                <button class="button secondary" id="share-game">Отправить приглашение</button>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Настройки времени</h3>
+              <div class="sidebar-content">
+                <label>Длительность (мин):
+                  <input type="number" id="multi-minutes" min="1" max="60" value="10" />
+                </label>
+                <label>Инкремент (с):
+                  <input type="number" id="multi-increment" min="0" max="60" value="0" />
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          <div class="board-wrapper">
+            <div class="chessboard" id="multi-board"></div>
+          </div>
+
+          <aside class="panel">
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">Статус</h3>
+              <div class="sidebar-content" id="multi-status"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">История</h3>
+              <div class="sidebar-content">
+                <div id="multi-history"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" id="quests-screen">
+        <div class="screen-header">
+          <button class="back-button" data-back>← Назад</button>
+          <div class="screen-title">
+            <h2>Квесты</h2>
+            <span>Решайте задачи и прокачивайте шахматное мышление</span>
+          </div>
+          <div class="badge warning" id="quest-progress">0 / 0 выполнено</div>
+        </div>
+
+        <div class="screen-body">
+          <div class="panel">
+            <div class="quest-list" id="quest-list"></div>
+          </div>
+          <div class="panel" id="quest-active-panel" hidden>
+            <div class="screen-title">
+              <h3 id="quest-active-title">Выберите квест</h3>
+              <span id="quest-active-hint">Выберите задание, чтобы увидеть позицию и цель.</span>
+            </div>
+            <div class="board-wrapper">
+              <div class="chessboard" id="quest-board"></div>
+            </div>
+            <div class="sidebar-content" id="quest-actions"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="profile-screen">
+        <div class="screen-header">
+          <button class="back-button" data-back>← Назад</button>
+          <div class="screen-title">
+            <h2>Профиль</h2>
+            <span>Статистика, достижения и история игр</span>
+          </div>
+          <div class="badge success" id="profile-rank">Новичок · 0 XP</div>
+        </div>
+
+        <div class="screen-body">
+          <div class="panel">
+            <div class="profile-grid">
+              <div>
+                <div class="profile-avatar" id="profile-avatar">♔</div>
+                <h3 id="profile-name">Игрок</h3>
+                <p id="profile-title" class="stat-label">Опытный · Уровень 1</p>
+                <div class="progress-bar"><div class="progress-fill" id="xp-progress"></div></div>
+              </div>
+              <div>
+                <div class="info-card">
+                  <div class="stat-label">Рейтинг</div>
+                  <div class="stat-value" id="profile-rating">1200</div>
+                </div>
+                <div class="info-card">
+                  <div class="stat-label">Процент побед</div>
+                  <div class="stat-value" id="profile-winrate">0%</div>
+                </div>
+              </div>
+              <div>
+                <div class="info-card">
+                  <div class="stat-label">Победы</div>
+                  <div class="stat-value" id="profile-wins">0</div>
+                </div>
+                <div class="info-card">
+                  <div class="stat-label">Поражения</div>
+                  <div class="stat-value" id="profile-losses">0</div>
+                </div>
+                <div class="info-card">
+                  <div class="stat-label">Ничьи</div>
+                  <div class="stat-value" id="profile-draws">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3 class="sidebar-title">История игр</h3>
+            <div class="history-list" id="profile-history"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="settings-screen">
+        <div class="screen-header">
+          <button class="back-button" data-back>← Назад</button>
+          <div class="screen-title">
+            <h2>Настройки</h2>
+            <span>Управляйте приложением под ваши предпочтения</span>
+          </div>
+        </div>
+
+        <div class="settings-layout">
+          <aside class="panel">
+            <div class="tabs" id="settings-tabs"></div>
+          </aside>
+          <div class="panel" id="settings-content"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="notification" id="notification"></div>
   </body>
 </html>

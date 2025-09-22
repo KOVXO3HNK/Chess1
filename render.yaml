@@ -1,0 +1,10 @@
+services:
+  - type: static_site
+    name: telegram-chess-webapp
+    env: static
+    buildCommand: ""
+    publishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
